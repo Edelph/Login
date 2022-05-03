@@ -4,15 +4,24 @@ let conn = require("../config/db")
 
 let router = express.Router()
 
-router.get("/", (req,res) => {
-    
-})
-
 router.post("/", (req, res) => {
-    mysql.query("SELECT * from login where ", (err) => {
-        if 
+    const username = req.body.username
+    const password = req.body.password
+
+    conn.query("SELECT * from user where username = '"+username+"'", (err, result) => {
+        if (err) throw err
+        else if (result.length != 0){
+            if(result[0].password == password){
+                res.json(result)
+            }
+            else{
+                res.json({err: "Mot de passe incorrect"})
+            }
+        }
+        else{
+            res.json({err: "Nom d'utilisateur invalide"})
+        }
     })
-    user = req.body
 })
 
 

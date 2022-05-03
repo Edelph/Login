@@ -13,8 +13,7 @@ let connection = mysql.createConnection({
 })
 
 connection.connect((err) => {
-    console.log(err);
-    return;
+    if (err) throw err
 })
 
 module.exports = connection

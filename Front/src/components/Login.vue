@@ -1,31 +1,64 @@
-<template>
-    <div>
+<template><div>
+        <NavBar/>
+    <div class="form">
         <h1>se connecter</h1>
-        <form action="post">
+        <form  @submit.prevent="onClick" action="post">
             <label for="username">Nom d'utilisateur:</label>
-            <input type="text" name="username" id="username">
+            <input v-model="username" type="text" name="username" id="username">
             <label for="password">Mot de pass:</label>
-            <input type="password" name="password" id="password">
+            <input v-model="password" type="password" name="password" id="password">
             <input type="submit" value="se connecter">
         </form>
 
     </div>
+    </div>
 </template>
 
 <script>
+    import router from '../router'
+    import NavBar from "./NavBar"
+    import axios from "axios"
     export default {
         name:'LoginUser',
+        components:{
+            NavBar
+        },
         data(){
             return{
-                name:"edelph"
+                username:"",
+                password:""
             }
-        }
+        },
+        methods: {
+            onClick(){
+                axios({
+                    method:"post",
+                    url:"http://localhost:3001/login",
+                    data:{
+                        username:this.username,
+                        password:this.password
+                    },
+                    
+                    responseType:"json"
+                }).then(response=>{
+                    if(response.data.userId){
+                        localStorage.setItem("user",JSON.stringify(response.data))
+                        router.push({
+                            name:"user"
+                        })
+                    }
+                
+                }).catch(err=>{
+                    console.log(err);
+                })
+            }
+        },
         
     }
 </script>
 
 <style scoped>
-    div{
+    .form{
         font-family: Arial, Helvetica, sans-serif;
         color: #fff;
         width: 400px;
